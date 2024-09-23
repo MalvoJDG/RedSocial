@@ -1,0 +1,36 @@
+﻿/* dark-mode.css */
+body {
+    background-color: #18191A;
+    color: #E4E6EB;
+}
+
+.card {
+    background-color: #242526;
+    color: #E4E6EB;
+    border: none;
+}
+
+.card-header, .card-footer {
+    background-color: #3A3B3C;
+}
+
+.card-link {
+    color: #2D88FF;
+}
+
+    .card-link:hover {
+        color: #AAB4BE;
+    }
+
+.navbar, .footer {
+    background-color: #242526;
+    color: #E4E6EB;
+}
+
+a {
+    color: #2D88FF;
+}
+
+    a:hover {
+        color: #AAB4BE;
+    }

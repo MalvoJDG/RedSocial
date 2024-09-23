@@ -1,0 +1,45 @@
+﻿@using RedSocial.Core.Application.ViewModels.Friend;
+@model SaveFriendViewModel
+@{
+    ViewData["Title"] = "Add Friend";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4>Add a new Friend</h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ModelErrors"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul>
+                                @foreach (var error in (List<string>)TempData["ModelErrors"])
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    <form method="post" asp-controller="Friend" asp-action="Add">
+
+                        <div class="mb-3">
+                            <label asp-for="FriendUser" class="form-label">Body: </label>
+                            <input asp-for="FriendUser" class="form-control" />
+                            <span asp-validation-for="FriendUser" class="text-danger"></span>
+                        </div>
+                  
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a asp-controller="Friend" asp-action="Index" class="btn btn-warning">Back</a>
+                        <input type="hidden" asp-for="Id" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

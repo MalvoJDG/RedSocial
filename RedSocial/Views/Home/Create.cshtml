@@ -1,0 +1,126 @@
+﻿@using RedSocial.Core.Application.ViewModels.Post;
+@using RedSocial.Core.Application.Enum;
+@model SavePostViewModel
+@{
+    bool editMode = Model.Id == 0 ? false : true;
+    ViewData["Title"] = "Create";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4>@(editMode ? $"Editing post" : "New Post")</h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ModelErrors"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul>
+                                @foreach (var error in (List<string>)TempData["ModelErrors"])
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    <form method="post" asp-controller="Home" asp-action="@(editMode ? "Edit":"Create")" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label asp-for="PublicationType" class="form-label">Publication Type: </label>
+                            <select id="publicationTypeSelect" class="form-select" asp-for="PublicationType">
+                                @foreach (var option in Enum.GetValues(typeof(PublicationType)))
+                                {
+                                    <option value="@option.ToString()">@option.ToString()</option>
+                                }
+                            </select>
+                            <span asp-validation-for="PublicationType" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Body" class="form-label">Body: </label>
+                            <input asp-for="Body" class="form-control" />
+                            <span asp-validation-for="Body" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3" id="FileInputContainer">
+                            <label asp-for="File">File:</label>
+                            @if (editMode)
+                            {
+                                <input type="file" asp-for="File" class="form-control" />
+                            }
+                            else
+                            {
+                                <input type="file" required asp-for="File" class="form-control" />
+                            }
+                        </div>
+
+                        <div class="mb-3" id="ArchiveInputContainer">
+                            <label asp-for="Archive">Url:</label>
+                            @if (editMode)
+                            {
+                                <input type="text" asp-for="Archive" class="form-control" />
+                            }
+                            else
+                            {
+                                <input type="text" required asp-for="Archive" class="form-control" />
+                            }
+                        </div>
+                        
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-warning">Back</a>
+                        <input type="hidden" asp-for="Id" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var publicationTypeSelect = document.getElementById('publicationTypeSelect');
+        var fileInputContainer = document.getElementById('FileInputContainer');
+        var archiveInputContainer = document.getElementById('ArchiveInputContainer');
+
+        publicationTypeSelect.addEventListener('change', function () {
+            var selectedValue = publicationTypeSelect.value;
+            if (selectedValue === '@(PublicationType.TEXT.ToString())') {
+                fileInputContainer.style.display = 'none'; 
+                archiveInputContainer.style.display = 'none'
+                document.getElementById('File').removeAttribute('required');
+                document.getElementById('Archive').removeAttribute('required');
+            } else if (selectedValue === '@(PublicationType.VIDEO.ToString())') {
+                fileInputContainer.style.display = 'none';
+                archiveInputContainer.style.display = 'block';
+                document.getElementById('File').removeAttribute('required');
+            }
+            else if (selectedValue === '@(PublicationType.IMAGE.ToString())') {
+                fileInputContainer.style.display = 'block';
+                archiveInputContainer.style.display = 'none';
+                document.getElementById('File').setAttribute('required', 'required');
+                document.getElementById('Archive').removeAttribute('required');
+            }
+        });
+
+        if (publicationTypeSelect.value === '@(PublicationType.TEXT.ToString())') {
+            fileInputContainer.style.display = 'none';
+            archiveInputContainer.style.display = 'none';
+            document.getElementById('File').removeAttribute('required');
+            document.getElementById('Archive').removeAttribute('required');
+        } else if (publicationTypeSelect.value === '@(PublicationType.VIDEO.ToString())') {
+            fileInputContainer.style.display = 'none';
+            archiveInputContainer.style.display = 'block';
+            document.getElementById('File').removeAttribute('required');
+        } else if (publicationTypeSelect.value === '@(PublicationType.IMAGE.ToString())') {
+            fileInputContainer.style.display = 'block';
+            archiveInputContainer.style.display = 'none';
+            document.getElementById('File').setAttribute('required', 'required');
+            document.getElementById('Archive').removeAttribute('required');
+        }
+    });
+</script>
